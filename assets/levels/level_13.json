@@ -1,0 +1,48 @@
+{ "height":5,
+ "layers":[
+        {
+         "data":[1, 29, 25, 1, 11, 11, 11, 30, 30, 26, 1, 1, 1, 1, 30, 10, 26, 26, 26, 1, 11, 30, 1, 1, 10, 26, 1, 26, 30, 10, 10, 1, 26, 26, 26],
+         "height":5,
+         "name":"Tile Layer 1",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":7,
+         "x":0,
+         "y":0
+        }],
+ "nextobjectid":1,
+ "orientation":"orthogonal",
+ "properties":
+    {
+
+    },
+ "renderorder":"right-down",
+ "tileheight":144,
+ "tilesets":[
+        {
+         "firstgid":1,
+         "image":"..\/images\/tile.png",
+         "imageheight":1296,
+         "imagewidth":576,
+         "margin":0,
+         "name":"tile",
+         "properties":
+            {
+
+            },
+         "spacing":0,
+         "tileheight":144,
+         "tileproperties":
+            {
+             "1":
+                {
+                 "head":"true"
+                }
+            },
+         "tilewidth":144
+        }],
+ "tilewidth":144,
+ "version":1,
+ "width":7
+}

@@ -1,0 +1,23 @@
+{
+  "name": "cleanup",
+  "version": "0.0.1",
+  "private": true,
+  "description": "",
+  "scripts": {
+    "post-install": "node ./node_modules/bower/bin/bower install",
+    "start": "./node_modules/.bin/gulp default"
+  },
+  "devDependencies": {
+    "babel": "*",
+    "babelify": "^5.0.4",
+    "browserify": "^9.0.3",
+    "gulp": "*",
+    "gulp-babel": "^4.0.0",
+    "gulp-server-livereload": "^1.2.1",
+    "gulp-util": "^3.0.4",
+    "phaser": "^2.2.2",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0",
+    "watchify": "^2.4.0"
+  }
+}
