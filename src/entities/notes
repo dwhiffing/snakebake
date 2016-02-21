@@ -1,0 +1,22 @@
+need to add modal for settings/instructions
+
+need transition for next level
+
+need main menu
+
+need to fix rotated cake bug
+
+need to fix three tile neighbour checking on snakes
+	-- just check to two adjacent segments in the array and connect to those
+
+need to add support for various win conditions
+
+add sound?
+
+add particles?
+
+add animations?
+
+-- need to add text for score/level/goal/timer
+-- need to make restart button work
+-- allow for switching of themes
