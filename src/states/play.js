@@ -1,9 +1,9 @@
+import Phaser from 'phaser'
 import UserInterface from '../entities/user_interface.js'
 
 export default class SnakeAndBake {
-
   create() {
-    let user_interface = new UserInterface();
+    let user_interface = new UserInterface()
 
     game.physics.startSystem(Phaser.Physics.ARCADE)
 
@@ -13,16 +13,16 @@ export default class SnakeAndBake {
 
     game.edible_types = {
       broc: 5,
-      cake: 6
+      cake: 6,
     }
-    
+
     game.snake_config = {
       numTiles: 4,
-      numTypes: 6
+      numTypes: 6,
     }
   }
 
   goFull() {
-    game.scale.startFullScreen(false);
+    game.scale.startFullScreen(false)
   }
 }

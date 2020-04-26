@@ -1,7 +1,8 @@
 import Snake from './snake'
+import Phaser from 'phaser'
 
-export default class Grid  {
-  constructor(opts)  {
+export default class Grid {
+  constructor(opts) {
     this.size = opts.tileSize
     this.extra_offset = opts.extra_offset
     this.offset = opts.offset
@@ -12,29 +13,29 @@ export default class Grid  {
     this.destroyLevel()
 
     // initialize a Phaser tilemap to keep track of walls
-    this.map = game.add.tilemap('level'+level)
+    this.map = game.add.tilemap('level' + level)
 
     // set up current theme tile set
     // need to make configurable to include multiple themes
     if (opts.theme == 'kawaii') {
-      this.map.addTilesetImage('tile','kawaii')
+      this.map.addTilesetImage('tile', 'kawaii')
     } else {
       this.map.addTilesetImage('tile')
     }
 
     // set up the tile layer to draw the current snakes/edibles
     this.layer = this.map.createLayer('Tile Layer 1')
-    
+
     // adjust tile layer to be offset to center it and make room of the ui
     this.layer.cameraOffset = {
-      x: this.offset.x, 
-      y: this.offset.y
+      x: this.offset.x,
+      y: this.offset.y,
     }
     this.layer.crop = {
       x: this.offset.x,
       y: this.offset.y,
       width: this.layer.width - this.offset.x,
-      height: this.layer.height - this.offset.y
+      height: this.layer.height - this.offset.y,
     }
     this.layer.resizeWorld()
 
@@ -43,24 +44,26 @@ export default class Grid  {
     let snake_coords = []
 
     // for each tile in each row of data
-    for (var tile of data) { 
+    for (var tile of data) {
       // check for each type of snake
       for (var color of [0, 1, 2, 3, 4, 5]) {
         let head_index = color * 4 + 12
         snake_coords[color] = snake_coords[color] || []
         // add the coords to the array if they fall in range
-        if (tile.index-1 >= head_index && tile.index-1 < head_index + 3) {
+        if (tile.index - 1 >= head_index && tile.index - 1 < head_index + 3) {
           // if its a head, add it to the front, otherwise to the end
-          let method = (tile.index-1 == head_index) ? 'unshift' : 'push'
+          let method = tile.index - 1 == head_index ? 'unshift' : 'push'
           snake_coords[color][method]([tile.x, tile.y])
         }
       }
     }
 
     // setup snakes for each type found in the data, filter out nils
-    this.snakes = snake_coords.map((coord, index) => {
-      return this.createSnake(coord, (index * 4) + 12)
-    }).filter((s) => typeof s !== 'undefined')
+    this.snakes = snake_coords
+      .map((coord, index) => {
+        return this.createSnake(coord, index * 4 + 12)
+      })
+      .filter((s) => typeof s !== 'undefined')
   }
 
   destroyLevel() {
@@ -73,7 +76,7 @@ export default class Grid  {
   }
 
   createSnake(coords, index) {
-    if (coords.length === 0) return 
+    if (coords.length === 0) return
     return new Snake(coords, index, this.map, this.layer, this)
   }
 
@@ -111,7 +114,11 @@ export default class Grid  {
   }
 
   // update the image and data for a given tile
-  updateTile(tile, index=this.active_snake.headTile.index, layer=this.layer) {
+  updateTile(
+    tile,
+    index = this.active_snake.headTile.index,
+    layer = this.layer,
+  ) {
     this.map.putTile(index, tile.x, tile.y, layer)
     tile.index = index
   }

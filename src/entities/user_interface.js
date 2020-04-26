@@ -1,20 +1,21 @@
 import Grid from './grid.js'
 import level_data from './level_data'
+import Phaser from 'phaser'
 
 export default class UserInterface {
   constructor() {
     this.tileSize = 144
-    this.extra_offset = {x:20, y: 0}
+    this.extra_offset = { x: 20, y: 0 }
     this.offset = {
-      x: this.tileSize * 2 + this.extra_offset.x, 
-      y:this.tileSize / 8
+      x: this.tileSize * 2 + this.extra_offset.x,
+      y: this.tileSize / 8,
     }
 
     // set up grid Object for snakes/edibles
     this.grid = new Grid({
-       tileSize: this.tileSize, 
-       extra_offset: this.extra_offset, 
-       offset: this.offset
+      tileSize: this.tileSize,
+      extra_offset: this.extra_offset,
+      offset: this.offset,
     })
 
     // set up cursor/maker image
@@ -30,25 +31,41 @@ export default class UserInterface {
     this.levels = level_data
 
     let text_opts = {
-      font: "36px Arial",
-      fill: "#ffffff",
-      align: "center",
+      font: '36px Arial',
+      fill: '#ffffff',
+      align: 'center',
       stroke: '#000000',
-      strokeThickness: 6
+      strokeThickness: 6,
     }
 
-    this.score_text = game.add.text(140, 120, "0", text_opts);
-    this.level_text = game.add.text(140, 280, "0", text_opts);
-    this.goal_text = game.add.text(140, 430, "0", text_opts);
-    this.time_text = game.add.text(140, 590, "0", text_opts);
+    this.score_text = game.add.text(140, 120, '0', text_opts)
+    this.level_text = game.add.text(140, 280, '0', text_opts)
+    this.goal_text = game.add.text(140, 430, '0', text_opts)
+    this.time_text = game.add.text(140, 590, '0', text_opts)
 
-    this.opt_button = game.add.button(0, 657, "opt_button", this.showOptions, this);
-    this.restart_button = game.add.button(100, 657, "restart_button", this.startLevel, this);
+    this.opt_button = game.add.button(
+      0,
+      657,
+      'opt_button',
+      this.showOptions,
+      this,
+    )
+    this.restart_button = game.add.button(
+      100,
+      657,
+      'restart_button',
+      this.startLevel,
+      this,
+    )
 
-    this.score_text.anchor.x = Math.round(this.score_text.width * 0.5) / this.score_text.width;
-    this.level_text.anchor.x = Math.round(this.level_text.width * 0.5) / this.level_text.width;
-    this.goal_text.anchor.x = Math.round(this.goal_text.width * 0.5) / this.goal_text.width;
-    this.time_text.anchor.x = Math.round(this.time_text.width * 0.5) / this.time_text.width;
+    this.score_text.anchor.x =
+      Math.round(this.score_text.width * 0.5) / this.score_text.width
+    this.level_text.anchor.x =
+      Math.round(this.level_text.width * 0.5) / this.level_text.width
+    this.goal_text.anchor.x =
+      Math.round(this.goal_text.width * 0.5) / this.goal_text.width
+    this.time_text.anchor.x =
+      Math.round(this.time_text.width * 0.5) / this.time_text.width
 
     this.timer = game.time.create(false)
     this.timer.loop(1000, this.updateCounter, this)
@@ -57,7 +74,10 @@ export default class UserInterface {
     this.sound_enabled = true
     this.normal_theme = true
 
-    this.crumb_emitter = game.add.emitter(game.world.centerX, game.world.centerY)
+    this.crumb_emitter = game.add.emitter(
+      game.world.centerX,
+      game.world.centerY,
+    )
     this.crumb_emitter.maxParticleAlpha = 1
     this.crumb_emitter.minParticleAlpha = 0.7
     this.crumb_emitter.makeParticles('crumb', 0, 400, 1, false, false)
@@ -68,8 +88,12 @@ export default class UserInterface {
     game.input.addMoveCallback(this.updateMarker, this)
 
     // listener for increasing score
-    game.increaseScore = (index,x,y) => {this.increaseScore(index,x,y)}
-    game.triggerSnakeKilled = (index) => {this.triggerSnakeKilled()}
+    game.increaseScore = (index, x, y) => {
+      this.increaseScore(index, x, y)
+    }
+    game.triggerSnakeKilled = (index) => {
+      this.triggerSnakeKilled()
+    }
 
     // game.music = game.add.audio('normal_music')
     // game.music.play()
@@ -84,28 +108,34 @@ export default class UserInterface {
     // amount of edibles collected
     this.collected = 0
     // number of edibles needed to progress
-    this.point_goal = this.levels[this.level-1].count
+    this.point_goal = this.levels[this.level - 1].count
 
     this.modal_is_open = false
+    let theme
 
-    theme = this.levels[this.level-1].kawaii ? 'kawaii' : 'normal'
+    theme = this.levels[this.level - 1].kawaii ? 'kawaii' : 'normal'
 
-    let theme = (!this.levels[this.level-1].kawaii && this.normal_theme) ? 'normal' : 'kawaii'
+    theme =
+      !this.levels[this.level - 1].kawaii && this.normal_theme
+        ? 'normal'
+        : 'kawaii'
 
     // let goal_string = this.levels[this.level-1].goal === 'kill' ? 'killed' : 'collected'
 
     this.level_text.text = this.level.toString()
     this.goal_text.text = `${this.collected} of ${this.point_goal}`
-    this.time_text.text = "0"
+    this.time_text.text = '0'
 
     if (this.background) this.background.destroy()
-    this.background = game.add.image(0,0,`${theme}_bg`).sendToBack()
+    this.background = game.add.image(0, 0, `${theme}_bg`).sendToBack()
 
-    this.grid.snakes.forEach((s) => {s.alive = false})
-    this.grid.newLevel(this.level, {theme: theme})
+    this.grid.snakes.forEach((s) => {
+      s.alive = false
+    })
+    this.grid.newLevel(this.level, { theme: theme })
 
     if (this.foliage) this.foliage.destroy()
-    this.foliage = game.add.image(0,0,`${theme}_foliage`).bringToTop()
+    this.foliage = game.add.image(0, 0, `${theme}_foliage`).bringToTop()
     if (this.modal) this.modal.bringToTop()
     if (this.win_button) this.win_button.destroy()
   }
@@ -113,20 +143,52 @@ export default class UserInterface {
   showOptions() {
     this.openModal('modal-settings')
 
-    let menu = game.add.button(game.width/2+50, game.height/2+80, null, this.backToMenu, this);
-    let close = game.add.button(game.width/2-50, game.height/2+80, null, this.closeModal, this);
-    let kawaii = game.add.button(game.width/2+132, game.height/2-70, 'switch', this.toggleKawaii, this);
-    let sound = game.add.button(game.width/2+132, game.height/2+15, 'switch', this.toggleSound, this);
-    close.width = 150; close.height = 50;
-    menu.width = 150; menu.height = 50;
+    let menu = game.add.button(
+      game.width / 2 + 50,
+      game.height / 2 + 80,
+      null,
+      this.backToMenu,
+      this,
+    )
+    let close = game.add.button(
+      game.width / 2 - 50,
+      game.height / 2 + 80,
+      null,
+      this.closeModal,
+      this,
+    )
+    let kawaii = game.add.button(
+      game.width / 2 + 132,
+      game.height / 2 - 70,
+      'switch',
+      this.toggleKawaii,
+      this,
+    )
+    let sound = game.add.button(
+      game.width / 2 + 132,
+      game.height / 2 + 15,
+      'switch',
+      this.toggleSound,
+      this,
+    )
+    close.width = 150
+    close.height = 50
+    menu.width = 150
+    menu.height = 50
     this.buttons = [close, menu, kawaii, sound]
-    this.buttons.forEach((b) => {b.anchor.x = 0.5})
+    this.buttons.forEach((b) => {
+      b.anchor.x = 0.5
+    })
   }
 
   showWinModal() {
     this.openModal('modal-win')
 
-    this.win_animation = game.add.sprite(game.width/2, game.height/2-20, 'win');
+    this.win_animation = game.add.sprite(
+      game.width / 2,
+      game.height / 2 - 20,
+      'win',
+    )
     this.win_animation.anchor.x = 0.5
     this.win_animation.anchor.y = 0.5
     this.win_animation.scale.x = 0.9
@@ -135,8 +197,15 @@ export default class UserInterface {
 
     anim.play(8, true)
 
-    this.win_button = game.add.button(game.width/2, game.height/2, null, this.startNextLevel, this);
-    this.win_button.width = 300; this.win_button.height = 300;
+    this.win_button = game.add.button(
+      game.width / 2,
+      game.height / 2,
+      null,
+      this.startNextLevel,
+      this,
+    )
+    this.win_button.width = 300
+    this.win_button.height = 300
     this.win_button.anchor.x = 0.5
     this.win_button.anchor.y = 0.5
   }
@@ -146,7 +215,9 @@ export default class UserInterface {
     this.modal_is_open = false
     this.modal.destroy()
     if (this.buttons) {
-      this.buttons.forEach((b) => {b.destroy()})
+      this.buttons.forEach((b) => {
+        b.destroy()
+      })
     }
   }
 
@@ -155,8 +226,8 @@ export default class UserInterface {
   }
 
   openModal(modal) {
-    this.modal_is_open = true;
-    this.modal = game.add.image(0,0, modal)
+    this.modal_is_open = true
+    this.modal = game.add.image(0, 0, modal)
   }
 
   toggleSound() {
@@ -178,7 +249,6 @@ export default class UserInterface {
 
   startDragging() {
     if (this.modal_is_open) {
-
     } else {
       this.grid.selectSnake(this.marker.x, this.marker.y)
     }
@@ -189,28 +259,29 @@ export default class UserInterface {
   }
 
   triggerSnakeKilled() {
-    if (this.levels[this.level-1].goal === 'kill') this.increaseScore(66)
+    if (this.levels[this.level - 1].goal === 'kill') this.increaseScore(66)
   }
 
   increaseScore(index, x, y) {
     if (index === game.edible_types.broc) {
-
     } else {
-      this.launchCrumbs(x,y)
+      this.launchCrumbs(x, y)
     }
 
     if (
-        (index === game.edible_types.cake && this.levels[this.level-1].goal == 'collect') ||
-        (index != game.edible_types.broc && this.levels[this.level-1].goal == 'collect_colored') ||
-        (index === 66 && this.levels[this.level-1].goal == 'kill')
-      ) {
+      (index === game.edible_types.cake &&
+        this.levels[this.level - 1].goal == 'collect') ||
+      (index != game.edible_types.broc &&
+        this.levels[this.level - 1].goal == 'collect_colored') ||
+      (index === 66 && this.levels[this.level - 1].goal == 'kill')
+    ) {
       this.score += 50
       this.score_text.text = this.score.toString()
       this.collected++
       this.goal_text.text = `${this.collected} of ${this.point_goal}`
       this.checkWinCondition()
     }
-    if (this.levels[this.level-1].spawnFood) {
+    if (this.levels[this.level - 1].spawnFood) {
       this.createFood()
     }
   }
@@ -231,7 +302,7 @@ export default class UserInterface {
   updateMarker() {
     if (this.modal_is_open) return
     let pointer = game.input.activePointer
-    if(!this.grid)return
+    if (!this.grid) return
     let tileX = this.grid.layer.getTileX(pointer.worldX)
     let tileY = this.grid.layer.getTileX(pointer.worldY)
 
@@ -244,12 +315,14 @@ export default class UserInterface {
   }
 
   createFood() {
-    let times = this.levels[this.level-1].spawnCount || 1
-    let type = this.levels[this.level-1].spawnType || 1
+    let times = this.levels[this.level - 1].spawnCount || 1
+    let type = this.levels[this.level - 1].spawnType || 1
     let index = game.edible_types['cake']
-    let chance = this.levels[this.level-1].chance || 30
+    let chance = this.levels[this.level - 1].chance || 30
     if (type === 2) {
-      index = Phaser.Math.chanceRoll(chance) ? game.edible_types['cake'] : game.edible_types['broc']
+      index = Phaser.Math.chanceRoll(chance)
+        ? game.edible_types['cake']
+        : game.edible_types['broc']
     }
 
     for (var i = 0; i < times; i++) {
@@ -261,9 +334,9 @@ export default class UserInterface {
     }
   }
 
-  launchCrumbs(x,y) {
-    x = x+this.offset.x+this.tileSize/2
-    y = y+this.tileSize/2
+  launchCrumbs(x, y) {
+    x = x + this.offset.x + this.tileSize / 2
+    y = y + this.tileSize / 2
     this.crumb_emitter.x = x
     this.crumb_emitter.y = y
     game.world.bringToTop(this.crumb_emitter)
@@ -271,9 +344,9 @@ export default class UserInterface {
   }
 
   updateCounter() {
-    if (!this.modal_is_open){
+    if (!this.modal_is_open) {
       this.time_text.text = this.time_elapsed.toString()
-      this.time_elapsed++;
+      this.time_elapsed++
     }
   }
 }
