@@ -6,6 +6,9 @@ export default class Load {
   preload() {
     this.load.onLoadComplete.addOnce(this.onLoadComplete, this)
 
+    let loader = game.add.sprite(150, 150, 'loader');
+    game.load.setPreloadSprite(loader);
+
     for (var i = 1; i <= 16; i++) {
       let string = i
       if (i < 10) {

@@ -1,6 +1,7 @@
 export default class Boot {
   preload() {
     this.load.baseURL = 'assets/'
+    this.load.image('loader', 'images/loader.png')
   }
 
   create() {
