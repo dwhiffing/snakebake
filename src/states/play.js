@@ -1,11 +1,10 @@
-import Phaser from 'phaser'
 import UserInterface from '../entities/user_interface.js'
 
 export default class SnakeAndBake {
   create() {
     let user_interface = new UserInterface()
 
-    game.physics.startSystem(Phaser.Physics.ARCADE)
+    game.physics.startSystem(window.Phaser.Physics.ARCADE)
 
     if (!this.game.device.desktop) {
       game.input.onDown.add(this.goFull, this)

@@ -1,4 +1,3 @@
-import Phaser from 'phaser'
 export default class Load {
   constructor() {
     this.loadingSprite = null
@@ -16,7 +15,7 @@ export default class Load {
         `level${i}`,
         `levels/level_${string}.json`,
         null,
-        Phaser.Tilemap.TILED_JSON,
+        window.Phaser.Tilemap.TILED_JSON,
       )
     }
 
